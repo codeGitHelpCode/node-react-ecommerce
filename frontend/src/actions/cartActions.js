@@ -6,8 +6,9 @@ const addToCart = (productId, qty) => async (dispatch, getState) => {
   try {
     const { data } = await Axios.get("/api/products/" + productId);
     dispatch({
-      type: CART_ADD_ITEM, payload: {
-        product: data._id,
+      type: CART_ADD_ITEM, 
+      payload: {
+        product: data.id,
         name: data.name,
         image: data.image,
         price: data.price,
@@ -17,9 +18,8 @@ const addToCart = (productId, qty) => async (dispatch, getState) => {
     });
     const { cart: { cartItems } } = getState();
     Cookie.set("cartItems", JSON.stringify(cartItems));
-
   } catch (error) {
-
+    console.error('添加商品到购物车失败！', error)
   }
 }
 const removeFromCart = (productId) => (dispatch, getState) => {

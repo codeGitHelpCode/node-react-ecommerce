@@ -5,16 +5,20 @@ function PaypalButton(props) {
   const [sdkReady, setSdkReady] = useState(false);
 
   const addPaypalSdk = async () => {
-    const result = await axios.get("/api/config/paypal");
-    const clientID = result.data;
-    const script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = 'https://www.paypal.com/sdk/js?client-id=' + clientID;
-    script.async = true;
-    script.onload = () => {
-      setSdkReady(true);
+    try {
+      const result = await axios.get("/api/config/paypal");
+      const clientID = result.data;
+      const script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = 'https://www.paypal.com/sdk/js?client-id=' + clientID;
+      script.async = true;
+      script.onload = () => {
+        setSdkReady(true);
+      }
+      document.body.appendChild(script);
+    } catch (error) {
+      console.error('failed to load pay sdk', error.message);
     }
-    document.body.appendChild(script);
   }
 
   const createOrder = (data, actions) => actions.order.create({
@@ -34,11 +38,17 @@ function PaypalButton(props) {
     .catch(err => console.log(err));
 
   useEffect(() => {
-    if (!window.paypal) {
-      addPaypalSdk();
+    let isMounted = true;
+    const loadPaypal = async () => {
+      if (!window.paypal) {
+        await addPaypalSdk();
+      } else if (isMounted) {
+        setSdkReady(true)
+      }
     }
+    loadPaypal();
     return () => {
-      //
+      isMounted = false;
     };
   }, []);
 

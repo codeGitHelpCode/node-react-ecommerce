@@ -18,7 +18,7 @@ function CartScreen(props) {
     if (productId) {
       dispatch(addToCart(productId, qty));
     }
-  }, []);
+  }, [dispatch, productId, qty]);
 
   const checkoutHandler = () => {
     props.history.push("/signin?redirect=shipping");
@@ -29,20 +29,21 @@ function CartScreen(props) {
       <ul className="cart-list-container">
         <li>
           <h3>
-            Shopping Cart
+            购物车
           </h3>
           <div>
-            Price
+            价格
           </div>
         </li>
         {
-          cartItems.length === 0 ?
+          cartItems.length === 0 ? (
             <div>
-              Cart is empty
+              购物车为空
+              <Link to="/">继续购物</Link>
           </div>
-            :
+            ):(
             cartItems.map(item =>
-              <li>
+              <li key={item.product}>
                 <div className="cart-image">
                   <img src={item.image} alt="product" />
                 </div>
@@ -54,21 +55,21 @@ function CartScreen(props) {
 
                   </div>
                   <div>
-                    Qty:
+                    数量:
                   <select value={item.qty} onChange={(e) => dispatch(addToCart(item.product, e.target.value))}>
                       {[...Array(item.countInStock).keys()].map(x =>
                         <option key={x + 1} value={x + 1}>{x + 1}</option>
                       )}
                     </select>
                     <button type="button" className="button" onClick={() => removeFromCartHandler(item.product)} >
-                      Delete
+                      删除
                     </button>
                   </div>
                 </div>
                 <div className="cart-price">
                   ${item.price}
                 </div>
-              </li>
+              </li>)
             )
         }
       </ul>
@@ -76,12 +77,12 @@ function CartScreen(props) {
     </div>
     <div className="cart-action">
       <h3>
-        Subtotal ( {cartItems.reduce((a, c) => a + c.qty, 0)} items)
+        小计 ( {cartItems.reduce((a, c) => a + c.qty, 0)} 件商品)
         :
          $ {cartItems.reduce((a, c) => a + c.price * c.qty, 0)}
       </h3>
       <button onClick={checkoutHandler} className="button primary full-width" disabled={cartItems.length === 0}>
-        Proceed to Checkout
+        去结算
       </button>
 
     </div>

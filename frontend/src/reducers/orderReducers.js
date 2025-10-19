@@ -44,11 +44,11 @@ function myOrderListReducer(state = {
 }, action) {
   switch (action.type) {
     case MY_ORDER_LIST_REQUEST:
-      return { loading: true };
+      return { loading: true, orders: [] };
     case MY_ORDER_LIST_SUCCESS:
-      return { loading: false, orders: action.payload };
+      return { loading: false, orders: action.payload || []};
     case MY_ORDER_LIST_FAIL:
-      return { loading: false, error: action.payload };
+      return { loading: false, error: action.payload || [] };
     default: return state;
   }
 }
@@ -58,11 +58,11 @@ function orderListReducer(state = {
 }, action) {
   switch (action.type) {
     case ORDER_LIST_REQUEST:
-      return { loading: true };
+      return { loading: true, orders: [] };
     case ORDER_LIST_SUCCESS:
-      return { loading: false, orders: action.payload };
+      return { loading: false, orders: action.payload || [] };
     case ORDER_LIST_FAIL:
-      return { loading: false, error: action.payload };
+      return { loading: false, error: action.payload || [] };
     default: return state;
   }
 }

@@ -18,7 +18,8 @@ import OrdersScreen from './screens/OrdersScreen';
 function App() {
   const userSignin = useSelector((state) => state.userSignin);
   const { userInfo } = userSignin;
-
+  const cart = useSelector(state => state.cart)
+  const { cartItems } = cart
   const openMenu = () => {
     document.querySelector('.sidebar').classList.add('open');
   };
@@ -31,22 +32,25 @@ function App() {
         <header className="header">
           <div className="brand">
             <button onClick={openMenu}>&#9776;</button>
-            <Link to="/">amazona</Link>
+            <Link to="/">微店商</Link>
           </div>
           <div className="header-links">
-            <a href="cart.html">Cart</a>
+            <Link to="/cart">购物车
+              {cartItems.length > 0 && (
+                <span className="badge">{cartItems.length}</span>
+              )}</Link>
             {userInfo ? (
               <Link to="/profile">{userInfo.name}</Link>
             ) : (
-              <Link to="/signin">Sign In</Link>
+              <Link to="/signin">登 录</Link>
             )}
             {userInfo && userInfo.isAdmin && (
               <div className="dropdown">
-                <a href="#">Admin</a>
+                <a href="#">管理后台</a>
                 <ul className="dropdown-content">
                   <li>
-                    <Link to="/orders">Orders</Link>
-                    <Link to="/products">Products</Link>
+                    <Link to="/orders">订单</Link>
+                    <Link to="/products">商品</Link>
                   </li>
                 </ul>
               </div>
@@ -54,17 +58,17 @@ function App() {
           </div>
         </header>
         <aside className="sidebar">
-          <h3>Shopping Categories</h3>
+          <h3>购物分类</h3>
           <button className="sidebar-close-button" onClick={closeMenu}>
             x
           </button>
           <ul className="categories">
             <li>
-              <Link to="/category/Pants">Pants</Link>
+              <Link to="/category/shorts">裤子</Link>
             </li>
 
             <li>
-              <Link to="/category/Shirts">Shirts</Link>
+              <Link to="/category/Shirts">衬衫</Link>
             </li>
           </ul>
         </aside>
@@ -85,7 +89,6 @@ function App() {
             <Route path="/" exact={true} component={HomeScreen} />
           </div>
         </main>
-        <footer className="footer">All right reserved.</footer>
       </div>
     </BrowserRouter>
   );

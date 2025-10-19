@@ -25,18 +25,18 @@ function OrderScreen(props) {
   const orderDetails = useSelector(state => state.orderDetails);
   const { loading, order, error } = orderDetails;
 
-  return loading ? <div>Loading ...</div> : error ? <div>{error}</div> :
+  return loading ? <div>加载中 ...</div> : error ? <div>{error}</div> :
 
     <div>
       <div className="placeorder">
         <div className="placeorder-info">
           <div>
             <h3>
-              Shipping
+              配送信息
           </h3>
             <div>
-              {order.shipping.address}, {order.shipping.city},
-          {order.shipping.postalCode}, {order.shipping.country},
+              {order.shippingAddress}, {order.shippingCity},
+          {order.shippingPostalCode}, {order.shippingCountry},
           </div>
             <div>
               {order.isDelivered ? "Delivered at " + order.deliveredAt : "Not Delivered."}
@@ -45,7 +45,7 @@ function OrderScreen(props) {
           <div>
             <h3>Payment</h3>
             <div>
-              Payment Method: {order.payment.paymentMethod}
+              Payment Method: {order.paymentMethod}
             </div>
             <div>
               {order.isPaid ? "Paid at " + order.paidAt : "Not Paid."}
@@ -55,20 +55,20 @@ function OrderScreen(props) {
             <ul className="cart-list-container">
               <li>
                 <h3>
-                  Shopping Cart
+                  购物车
           </h3>
                 <div>
-                  Price
+                  价格
           </div>
               </li>
               {
                 order.orderItems.length === 0 ?
                   <div>
-                    Cart is empty
+                    购物车为空
           </div>
                   :
                   order.orderItems.map(item =>
-                    <li key={item._id}>
+                    <li key={item.id}>
                       <div className="cart-image">
                         <img src={item.image} alt="product" />
                       </div>
@@ -97,7 +97,7 @@ function OrderScreen(props) {
         <div className="placeorder-action">
           <ul>
             <li className="placeorder-actions-payment">
-              {loadingPay && <div>Finishing Payment...</div>}
+              {loadingPay && <div>完成支付...</div>}
               {!order.isPaid &&
                 <PaypalButton
                   amount={order.totalPrice}

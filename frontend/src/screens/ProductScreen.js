@@ -28,7 +28,7 @@ function ProductScreen(props) {
     return () => {
       //
     };
-  }, [productSaveSuccess]);
+  }, [productSaveSuccess, dispatch, props.match.params.id]);
   const submitHandler = (e) => {
     e.preventDefault();
     // dispatch actions
@@ -47,10 +47,10 @@ function ProductScreen(props) {
   return (
     <div>
       <div className="back-to-result">
-        <Link to="/">Back to result</Link>
+        <Link to="/">返回商品列表</Link>
       </div>
       {loading ? (
-        <div>Loading...</div>
+        <div>加载中...</div>
       ) : error ? (
         <div>{error} </div>
       ) : (
@@ -73,23 +73,23 @@ function ProductScreen(props) {
                   </a>
                 </li>
                 <li>
-                  Price: <b>${product.price}</b>
+                  价格: <b>${product.price}</b>
                 </li>
                 <li>
-                  Description:
+                  描述:
                   <div>{product.description}</div>
                 </li>
               </ul>
             </div>
             <div className="details-action">
               <ul>
-                <li>Price: {product.price}</li>
+                <li>价格: {product.price}</li>
                 <li>
-                  Status:{' '}
+                  状态:{' '}
                   {product.countInStock > 0 ? 'In Stock' : 'Unavailable.'}
                 </li>
                 <li>
-                  Qty:{' '}
+                  数量:{' '}
                   <select
                     value={qty}
                     onChange={(e) => {
@@ -109,7 +109,7 @@ function ProductScreen(props) {
                       onClick={handleAddToCart}
                       className="button primary"
                     >
-                      Add to Cart
+                      加入购物车
                     </button>
                   )}
                 </li>
@@ -117,11 +117,11 @@ function ProductScreen(props) {
             </div>
           </div>
           <div className="content-margined">
-            <h2>Reviews</h2>
-            {!product.reviews.length && <div>There is no review</div>}
+            <h2>商品评价</h2>
+            {!product.reviews.length && <div>暂无评价</div>}
             <ul className="review" id="reviews">
               {product.reviews.map((review) => (
-                <li key={review._id}>
+                <li key={review.id}>
                   <div>{review.name}</div>
                   <div>
                     <Rating value={review.rating}></Rating>
@@ -131,23 +131,23 @@ function ProductScreen(props) {
                 </li>
               ))}
               <li>
-                <h3>Write a customer review</h3>
+                <h3>写评价</h3>
                 {userInfo ? (
                   <form onSubmit={submitHandler}>
                     <ul className="form-container">
                       <li>
-                        <label htmlFor="rating">Rating</label>
+                        <label htmlFor="rating">评价</label>
                         <select
                           name="rating"
                           id="rating"
                           value={rating}
                           onChange={(e) => setRating(e.target.value)}
                         >
-                          <option value="1">1- Poor</option>
-                          <option value="2">2- Fair</option>
-                          <option value="3">3- Good</option>
-                          <option value="4">4- Very Good</option>
-                          <option value="5">5- Excelent</option>
+                          <option value="1">1- 很差</option>
+                          <option value="2">2- 一般</option>
+                          <option value="3">3- 良好</option>
+                          <option value="4">4- 很好</option>
+                          <option value="5">5- 优秀</option>
                         </select>
                       </li>
                       <li>
@@ -160,14 +160,14 @@ function ProductScreen(props) {
                       </li>
                       <li>
                         <button type="submit" className="button primary">
-                          Submit
+                          提交评价
                         </button>
                       </li>
                     </ul>
                   </form>
                 ) : (
                   <div>
-                    Please <Link to="/signin">Sign-in</Link> to write a review.
+                    请先 <Link to="/signin">登录</Link> 后写评价.
                   </div>
                 )}
               </li>

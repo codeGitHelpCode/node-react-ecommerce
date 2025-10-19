@@ -18,7 +18,7 @@ function ProfileScreen(props) {
   }
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(update({ userId: userInfo._id, email, name, password }))
+    dispatch(update({ userId: userInfo.id, email, name, password }))
   }
   const userUpdate = useSelector(state => state.userUpdate);
   const { loading, success, error } = userUpdate;
@@ -30,7 +30,7 @@ function ProfileScreen(props) {
       console.log(userInfo.name)
       setEmail(userInfo.email);
       setName(userInfo.name);
-      setPassword(userInfo.password);
+      setPassword(userInfo.password || '');
     }
     dispatch(listMyOrders());
     return () => {
@@ -97,13 +97,13 @@ function ProfileScreen(props) {
                 </tr>
               </thead>
               <tbody>
-                {orders.map(order => <tr key={order._id}>
-                  <td>{order._id}</td>
+                {orders.map(order => <tr key={order.id}>
+                  <td>{order.id}</td>
                   <td>{order.createdAt}</td>
                   <td>{order.totalPrice}</td>
                   <td>{order.isPaid}</td>
                   <td>
-                    <Link to={"/order/" + order._id}>DETAILS</Link>
+                    <Link to={"/order/" + order.id}>DETAILS</Link>
                   </td>
                 </tr>)}
               </tbody>

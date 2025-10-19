@@ -1,43 +1,105 @@
-import mongoose from 'mongoose';
-const shippingSchema = {
-  address: { type: String, required: true },
-  city: { type: String, required: true },
-  postalCode: { type: String, required: true },
-  country: { type: String, required: true },
-};
+import { DataTypes } from 'sequelize';
+import sequelize from '../config/database.js';
 
-const paymentSchema = {
-  paymentMethod: { type: String, required: true }
-};
-
-const orderItemSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  qty: { type: Number, required: true },
-  image: { type: String, required: true },
-  price: { type: String, required: true },
-  product: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Product',
-    required: true
+const OrderItem = sequelize.define('OrderItem', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
   },
-});
-
-const orderSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  orderItems: [orderItemSchema],
-  shipping: shippingSchema,
-  payment: paymentSchema,
-  itemsPrice: { type: Number },
-  taxPrice: { type: Number },
-  shippingPrice: { type: Number },
-  totalPrice: { type: Number },
-  isPaid: { type: Boolean, default: false },
-  paidAt: { type: Date },
-  isDelivered: { type: Boolean, default: false },
-  deliveredAt: { type: Date },
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  qty: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  image: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  price: {
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: false,
+  },
+  productId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  orderId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
 }, {
-  timestamps: true
+  tableName: 'order_items',
+  timestamps: false,
 });
 
-const orderModel = mongoose.model("Order", orderSchema);
-export default orderModel;
+const Order = sequelize.define('Order', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  userId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  shippingAddress: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  shippingCity: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  shippingPostalCode: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  shippingCountry: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  paymentMethod: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  itemsPrice: {
+    type: DataTypes.DECIMAL(10, 2),
+  },
+  taxPrice: {
+    type: DataTypes.DECIMAL(10, 2),
+  },
+  shippingPrice: {
+    type: DataTypes.DECIMAL(10, 2),
+  },
+  totalPrice: {
+    type: DataTypes.DECIMAL(10, 2),
+  },
+  isPaid: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
+  paidAt: {
+    type: DataTypes.DATE,
+  },
+  isDelivered: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
+  deliveredAt: {
+    type: DataTypes.DATE,
+  },
+}, {
+  tableName: 'orders',
+  timestamps: true,
+});
+
+// 定义关联关系
+Order.hasMany(OrderItem, { foreignKey: 'orderId', as: 'orderItems' });
+OrderItem.belongsTo(Order, { foreignKey: 'orderId', as: 'order' });
+
+export default Order;
+export { OrderItem };

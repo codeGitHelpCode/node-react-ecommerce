@@ -48,7 +48,7 @@ function ProductsScreen(props) {
 
   const openModal = (product) => {
     setModalVisible(true);
-    setId(product._id);
+    setId(product.id);
     setName(product.name);
     setPrice(product.price);
     setDescription(product.description);
@@ -61,7 +61,7 @@ function ProductsScreen(props) {
     e.preventDefault();
     dispatch(
       saveProduct({
-        _id: id,
+        id: id,
         name,
         price,
         image,
@@ -73,7 +73,7 @@ function ProductsScreen(props) {
     );
   };
   const deleteHandler = (product) => {
-    dispatch(deleteProdcut(product._id));
+    dispatch(deleteProdcut(product.id));
   };
   const uploadFileHandler = (e) => {
     const file = e.target.files[0];
@@ -219,8 +219,8 @@ function ProductsScreen(props) {
           </thead>
           <tbody>
             {products.map((product) => (
-              <tr key={product._id}>
-                <td>{product._id}</td>
+              <tr key={product.id}>
+                <td>{product.id}</td>
                 <td>{product.name}</td>
                 <td>{product.price}</td>
                 <td>{product.category}</td>

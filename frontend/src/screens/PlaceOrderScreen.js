@@ -31,7 +31,7 @@ function PlaceOrderScreen(props) {
   }
   useEffect(() => {
     if (success) {
-      props.history.push("/order/" + order._id);
+      props.history.push("/order/" + order.id);
     }
 
   }, [success]);
@@ -57,22 +57,22 @@ function PlaceOrderScreen(props) {
         </div>
         <div>
           <ul className="cart-list-container">
-            <li>
+            <li key="header">
               <h3>
                 Shopping Cart
-          </h3>
+              </h3>
               <div>
                 Price
-          </div>
+              </div>
             </li>
             {
               cartItems.length === 0 ?
-                <div>
+                <li>
                   Cart is empty
-          </div>
+                </li>
                 :
                 cartItems.map(item =>
-                  <li>
+                  <li key={item.id}>
                     <div className="cart-image">
                       <img src={item.image} alt="product" />
                     </div>

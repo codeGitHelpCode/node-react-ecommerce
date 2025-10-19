@@ -11,12 +11,11 @@ function HomeScreen(props) {
   const category = props.match.params.id ? props.match.params.id : '';
   const productList = useSelector((state) => state.productList);
   const { products, loading, error } = productList;
+  
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(listProducts(category));
-
     return () => {
-      //
     };
   }, [category]);
 
@@ -24,6 +23,7 @@ function HomeScreen(props) {
     e.preventDefault();
     dispatch(listProducts(category, searchKeyword, sortOrder));
   };
+  
   const sortHandler = (e) => {
     setSortOrder(e.target.value);
     dispatch(listProducts(category, searchKeyword, sortOrder));
@@ -52,16 +52,19 @@ function HomeScreen(props) {
           </select>
         </li>
       </ul>
+      
       {loading ? (
         <div>Loading...</div>
       ) : error ? (
-        <div>{error}</div>
+        <div>Error: {error}</div>
+      ) : !products || products.length === 0 ? (
+        <div>No products found</div>
       ) : (
         <ul className="products">
           {products.map((product) => (
-            <li key={product._id}>
+            <li key={product.id}>
               <div className="product">
-                <Link to={'/product/' + product._id}>
+                <Link to={'/product/' + product.id}>
                   <img
                     className="product-image"
                     src={product.image}
@@ -69,7 +72,9 @@ function HomeScreen(props) {
                   />
                 </Link>
                 <div className="product-name">
-                  <Link to={'/product/' + product._id}>{product.name}</Link>
+                  <Link to={'/product/' + product.id}>
+                    {product.name}
+                  </Link>
                 </div>
                 <div className="product-brand">{product.brand}</div>
                 <div className="product-price">${product.price}</div>
@@ -87,4 +92,5 @@ function HomeScreen(props) {
     </>
   );
 }
+
 export default HomeScreen;
